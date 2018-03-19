@@ -14,7 +14,7 @@ Here you can find a simple way to get crypto coins historical data and basic sta
   | i_coin_file_path |	Csv file name	| crypto_coins
   | i_from_date |	Pull data from this date | 30 days ago
   | i_to_date	|Pull data till this date	| Yesterday
-  | i_min_volume | pull 24 Hrs. volume bigger than dates |100,000 [usd]
+  | i_min_volume | pull 24 Hrs. volume bigger than this parameter |100,000 [usd]
 
   #### Output
   CSV file contains the following columns: Coin, Cur. rank, Close, Date, High, Low, Market cap, Open, Volume
@@ -25,7 +25,7 @@ Here you can find a simple way to get crypto coins historical data and basic sta
  
   | Parameter |	Description	| Format
   | --- | --- | --- |
-  | i_coin | coin name | string
+  | i_coin | Coin name | string
   | i_from_date | Pull data from this date | string 'YYYYmmdd'
   | i_to_date | Pull data till this date | string 'YYYYmmdd'
   
