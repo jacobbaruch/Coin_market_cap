@@ -47,7 +47,8 @@ Here you can find a simple way to get crypto coins historical data and basic sta
 CSV file contains the following columns:
 
 | Column | Calculation description
-| --- | --- | 
+| --- | --- |
+| Change [Close] | ([Close] – [Yesterday Close])/ [Yesterday Close]
 | Change [High] | ([High] – [Yesterday High])/ [Yesterday High]
 | Change [Market Cap] | ([Market Cap] – [Market Cap High])/ [Market Cap High]
 | Change [Volume] | ([Volume] – [Volume High])/ [Volume High]
