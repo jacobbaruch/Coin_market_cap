@@ -12,8 +12,8 @@ Here you can find a simple way to get crypto coins historical data and basic sta
   | i_rank_start |	Pull data from current rank [includes] |	1
   | i_rank_end |	Pull data to current rank [includes]	| 10
   | i_coin_file_path |	Csv file name	| crypto_coins
-  | i_from_date |	Pull data from this date | 30 days ago
-  | i_to_date	|Pull data till this date	| Yesterday
+  | i_from_date |	Pull data from this date [YYYY-MM-DD] | 30 days ago
+  | i_to_date	|Pull data till this date [YYYY-MM-DD]	| Yesterday
   | i_min_volume | pull 24 Hrs. volume bigger than this parameter |100,000 [usd]
 
   #### Output
