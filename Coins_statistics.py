@@ -33,6 +33,7 @@ def extend_daily_data(i_df):
  i_df['Day Change [open to high]'] = (i_df['High'] - i_df['Open']) / i_df['Open']
  i_df['Day Change [open to close]'] = (i_df['Close'] - i_df['Open']) / i_df['Open']
  i_df['Date'] = pd.to_datetime(i_df['Date'])
+ i_df['Market Cap'] = i_df['Market Cap'].str.replace('-','')
  i_df['Market Cap'] = pd.to_numeric(i_df['Market Cap'].str.replace(',', ''))
  i_df['Volume'] = pd.to_numeric(i_df['Volume'].str.replace(',', ''))
 
@@ -51,7 +52,6 @@ def get_mean(i_df):
  df_group_by_coin = (i_df.groupby(['Coin'], as_index=False)
   .agg({'High': 'mean', 'Volume': 'mean'})
   .rename(columns={'High': 'High Avg', 'Volume': 'Volume Avg.'}))
- print(df_group_by_coin)
  return df_group_by_coin
 
 
@@ -77,9 +77,10 @@ def attach_yesterday_data(i_df):
  i_df['Yesterday'] = i_df['Date'].apply(pd.DateOffset(days=-1))
 
  # assign data frame that will merge into 'i_df'
- df_yesterday = i_df[['Coin', 'Date', 'High', 'Market Cap', 'Volume']]
+ df_yesterday = i_df[['Coin', 'Date', 'High', 'Market Cap', 'Volume','Close']]
  df_yesterday = df_yesterday.rename(index=str, columns={'Date': 'Yesterday',
                                                         'High': 'High Yesterday',
+                                                        'Close': 'Close Yesterday',
                                                         'Market Cap': 'Market Cap yesterday',
                                                         'Volume': 'Volume yesterday'})
  # merging the data frames based on Coin + Yesterday Date
@@ -94,13 +95,14 @@ def calc_yesterday_statistics(i_df):
  """
  :param dataframe i_df: contains extended data
  :return dataframe: for each date we calc the changes in:
-  High, Market Cap, Volume, correlation between changes
+  Close, High, Market Cap, Volume, correlation between changes
  """
-
+ i_df['Change [Close]'] = (i_df['Close'] - i_df['Close Yesterday']) /  i_df['Close Yesterday']
  i_df['Change [High]'] = (i_df['High'] - i_df['High Yesterday']) / i_df['High Yesterday']
  i_df['Change [Market Cap]'] = (i_df['Market Cap'] - i_df['Market Cap yesterday']) / i_df['Market Cap yesterday']
  i_df['Change [Volume]'] = (i_df['Volume'] - i_df['Volume yesterday']) / i_df['Volume yesterday']
 
+ i_df.drop(['Close Yesterday'], axis=1, inplace=True)
  i_df.drop(['High Yesterday'], axis=1, inplace=True)
  i_df.drop(['Market Cap yesterday'], axis=1, inplace=True)
  i_df.drop(['Volume yesterday'], axis=1, inplace=True)
