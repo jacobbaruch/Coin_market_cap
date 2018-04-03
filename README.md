@@ -1,6 +1,6 @@
 # Coin_market_cap
-Here you can find a simple way to get crypto coins historical data and basic statistics out of ‘coinmarketcap.com’.
-
+Here you can find a simple way to get crypto coins historical data and basic statistics out of ‘coinmarketcap.com’,
+by coins range, coin name, min. volume, traded in specific markets
 # Usage
 ## Coins_history.py 
 ### Main method to run: get_crypto_coins_history 
