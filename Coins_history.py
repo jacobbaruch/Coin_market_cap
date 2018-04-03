@@ -7,7 +7,8 @@ from _datetime import datetime, date, timedelta
 
 
 def save_crypto_coins_history(i_rank_start=1, i_rank_end=10, i_coin_file_path='crypto_coins',
-                             i_from_date=None, i_to_date=None, i_min_volume=100000):
+                             i_from_date=None, i_to_date=None, i_min_volume=100000,
+                             i_coin_markets=[]):
  """
  :param int i_rank_start: pull data from coin current ranking [includes]
  :param int i_rank_end:  pull data till coin current ranking [includes]
@@ -15,6 +16,7 @@ def save_crypto_coins_history(i_rank_start=1, i_rank_end=10, i_coin_file_path='c
  :param str 'YYYY-MM-DD' i_from_date: pull data from this date [includes]
  :param str 'YYYY-MM-DD' i_to_date: pull data till this date [includes]
  :param int i_min_volume:  pull coins with 24 Hrs volume bigger/equal than this value
+ :param list i_coin_markets: pull coins that traded at least in one of the markets, if empty we ignore this
  writes to a csv file - historic data of coins
  """
 
@@ -24,8 +26,9 @@ def save_crypto_coins_history(i_rank_start=1, i_rank_end=10, i_coin_file_path='c
 
  df_coins = pd.DataFrame([])
  for rank, coin in coins_ranking_dict.items():
-  df_coins = df_coins.append(get_coins_historical_data(rank, coin, from_date, to_date))
-  write_df_to_csv(df_coins, i_coin_file_path + '.csv')
+  if is_coin_in_markets(coin, set(i_coin_markets)):
+   df_coins = df_coins.append(get_coins_historical_data(rank, coin, from_date, to_date))
+   write_df_to_csv(df_coins, i_coin_file_path + '.csv')
 
 
 def get_coins_current_ranking(i_start, i_limit, i_min_volume):
@@ -153,3 +156,38 @@ def get_from_to_dates(i_from_date, i_to_date):
  except ValueError as e:
   print(e)
   sys.exit(13)
+
+
+def is_coin_in_markets(i_coin, i_coin_markets_to_search):
+ '''
+ :param str i_coin: see if this coin available in following markets
+ :param set i_coin_markets_to_search: markets set to search in
+ :param int i_min_market_volume: minimum trading volume to a market
+ :return boolean : True - if coin traded in one of the markets to search or market set is empty
+                   False - coin isn't traded at the markets
+ '''
+
+ coin_in_markets = False
+ coin_markets_url = 'https://coinmarketcap.com/currencies/{}/#markets'.format(i_coin)
+
+ if not i_coin_markets_to_search:
+  coin_in_markets = True
+ else:
+  # collect and parse coin historical page
+  page = requests.get(coin_markets_url)
+  soup = BeautifulSoup(page.text, 'html.parser')
+  table = soup.find('table')
+  rows = table.findAll('tr')[1:]
+
+  #getting markets of coin
+  markets = set()
+  for row in rows:
+   cols = row.findAll('td')
+   markets.add(cols[1].string.upper())
+
+   for market in i_coin_markets_to_search:
+    if market.upper() in markets:
+     coin_in_markets = True
+     break
+
+ return  coin_in_markets
