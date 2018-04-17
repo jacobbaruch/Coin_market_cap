@@ -183,7 +183,8 @@ def is_coin_in_markets(i_coin, i_coin_markets_to_search):
   markets = set()
   for row in rows:
    cols = row.findAll('td')
-   markets.add(cols[1].string.upper())
+   if cols[1].text is not None:
+    markets.add(cols[1].text.upper())
 
    for market in i_coin_markets_to_search:
     if market.upper() in markets:
